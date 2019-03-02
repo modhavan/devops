@@ -1,0 +1,47 @@
+pipeline{
+     agent {
+	     node{
+		  label 'slave'
+	 }
+ }
+	  stages {
+		    stage('Ansible started'){
+			  steps{
+			      sh 'echo "ansible start....!"'
+			  }
+			}
+			stage('change folder'){
+			  steps{
+			      sh 'cd /home/ec2-user/workspace'
+				  sh 'echo "Changing folder....!"'
+			  }
+			}
+			stage('Remove folder'){
+			  steps{
+			      sh 'cd /home/ec2-user/workspace'
+			      sh 'rm -rf *'
+				  sh 'echo "Remove folder....!"'
+			  }
+			}
+			stage('Git clone'){
+			  steps{
+			     sh 'cd /home/ec2-user/workspace/ansible-pipe-linejob'
+			     sh 'git clone https://github.com/modhavan/document.git'
+		            
+			  }
+			}
+			stage('wait for cloning to be complete'){
+			  steps{
+			    echo 'Waiting 30 seconds cloning to be complete'
+ 			    
+		            }
+			}
+		stage('Ansible playbook'){
+			  steps{
+			      sh 'cd /home/ec2-user/workspace/ansible-pipe-linejob/document/ && ansible-playbook test.yml -b -vvv'
+			     
+			  }
+			}
+	
+}	
+}
